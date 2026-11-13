@@ -1,0 +1,12 @@
+node_modules
+.DS_Store
+.env
+
+# Saved on the server by visitors - must not be overwritten by updates
+tiles.json
+tiles.json.bak
+tiles.json.tmp
+tiles.json.corrupt-*
+
+# Local-only HTTPS certificate/keys (the real server doesn't use them)
+keys-for-local-https/
