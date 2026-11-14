@@ -1,105 +1,174 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-  <link rel="manifest" href="manifest.json" />
-  <title>Naqsh</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="lib/p5.js"></script>
-  <script src="lib/p5.sound.js"></script>
-  <script src="socket.io/socket.io.js"></script>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="manifest" href="manifest.json" />
+    <title>Naqsh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="lib/p5.js"></script>
+    <!-- <script src="lib/p5.sound.js"></script> -->
+    <script src="socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <!-- Intro -->
+    <div id="intro-screen">
+      <p>
+        Islamic Geometric Patterns are a geometric system defined by a
+        continuous network of overlapping stars and polygons.
+      </p>
+      <p>It emphasizes abstraction through the use of geometric forms.</p>
 
-  <!-- Intro -->
-  <div id="intro-screen">
-    <p>Islamic Geometric Patterns are a geometric system defined by a continuous network of overlapping stars and polygons.</p>
-    <p>It emphasizes abstraction through the use of geometric forms.</p>
+      <button id="introButton">Continue</button>
+    </div>
 
-    <button id="introButton">Continue</button>
-  </div>
+    <!-- Pattern screen -->
+    <div id="mandala-screen" style="display: none">
+      <div id="pan-hint">
+        Long press to generate new pattern · use two fingers to move <br />
+        swipe a finger and double tap to interact · Turn volume up
+      </div>
+    </div>
 
-  <!-- Pattern screen -->
-  <div id="mandala-screen" style="display:none;">
-    <div id="pan-hint">Long press to generate new pattern · use two fingers to move <br> swipe a finger and double tap to interact · Turn volume up </div>
-  </div>
-
-  <!-- IGP Modal -->
-  <div id="igp-modal" style="display:none;">
-    <div id="igp-modal-inner">
-
-      <div id="igp-header">
-        <div id="igp-battery-info">
-          <span class="igp-icon">∠</span>
-          <div>
-            <div class="igp-stat-label">Angle</div>
-            <div class="igp-stat-val" id="igp-angle-val">45°</div>
+    <!-- IGP Modal -->
+    <div id="igp-modal" style="display: none">
+      <div id="igp-modal-inner">
+        <div id="igp-header">
+          <div id="igp-battery-info">
+            <span class="igp-icon">∠</span>
+            <div>
+              <div class="igp-stat-label">Angle</div>
+              <div class="igp-stat-val" id="igp-angle-val">45°</div>
+            </div>
           </div>
-        </div>
-        <!-- <div class="igp-divider">◈</div> -->
-        <div id="igp-angle-info">
-          <!-- <span class="igp-icon">⬡</span> -->
-          <!-- <div>
+          <!-- <div class="igp-divider">◈</div> -->
+          <div id="igp-angle-info">
+            <!-- <span class="igp-icon">⬡</span> -->
+            <!-- <div>
             <div class="igp-stat-label">Tiling</div>
             <div class="igp-stat-val" id="igp-tiling-val">Square</div>
           </div> -->
+          </div>
         </div>
-      </div>
 
-      <div id="igp-canvas-container">
-        <canvas id="igp-canvas"></canvas>
-      </div>
+        <div id="igp-canvas-container">
+          <canvas id="igp-canvas"></canvas>
+        </div>
 
-      <!-- Tiling type buttons -->
-      <div id="igp-tiling-btns">
-        <!-- <button class="tiling-btn active" data-tiling="square">Square</button> -->
-        <button class="tiling-btn" data-tiling="squareOctagon">Square-Octagon</button>
-        <button class="tiling-btn" data-tiling="rhombitrihexagonal">Rhombus-Hexagon</button>
-      </div>
+        <!-- Tiling type buttons -->
+        <div id="igp-tiling-btns">
+          <!-- <button class="tiling-btn active" data-tiling="square">Square</button> -->
+          <button class="tiling-btn" data-tiling="squareOctagon">
+            Square-Octagon
+          </button>
+          <button class="tiling-btn" data-tiling="rhombitrihexagonal">
+            Rhombus-Hexagon
+          </button>
+        </div>
 
-      <!-- <div id="igp-colors">
+        <!-- <div id="igp-colors">
         <div class="igp-color-group">
           <label>Line Color</label>
           <div class="color-swatch-wrap"> -->
-            <!-- replace the igp-colors div with this -->
-<div id="igp-colors">
-  <div class="igp-color-group">
-    <label>Tile Color</label>
-    <div id="color-palette">
-      <button class="color-dot" data-color="#F94144" style="background:#F94144"></button>
-      <button class="color-dot" data-color="#F3722C" style="background:#F3722C"></button>
-      <button class="color-dot" data-color="#F8961E" style="background:#F8961E"></button>
-      <button class="color-dot" data-color="#F9C74F" style="background:#F9C74F"></button>
-      <button class="color-dot" data-color="#90BE6D" style="background:#90BE6D"></button>
-      <button class="color-dot" data-color="#43AA8B" style="background:#43AA8B"></button>
-      <button class="color-dot" data-color="#577590" style="background:#577590"></button>
-      <button class="color-dot" data-color="#1AA77C" style="background:#1AA77C"></button>
-      <button class="color-dot" data-color="#6930C3" style="background:#6930C3"></button>
-      <button class="color-dot" data-color="#5E60CE" style="background:#5E60CE"></button>
-      <button class="color-dot" data-color="#5390D9" style="background:#5390D9"></button>
-      <button class="color-dot" data-color="#4EA8DE" style="background:#4EA8DE"></button>
-      <button class="color-dot" data-color="#48BFE3" style="background:#48BFE3"></button>
-      <button class="color-dot" data-color="#64DFDF" style="background:#64DFDF"></button>
-    </div>
-  </div>
-</div>
-            <!-- <input type="color" id="igp-color-main" value="#1a4a8a">
+        <!-- replace the igp-colors div with this -->
+        <div id="igp-colors">
+          <div class="igp-color-group">
+            <label>Tile Color</label>
+            <div id="color-palette">
+              <button
+                class="color-dot"
+                data-color="#F94144"
+                style="background: #f94144"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#F3722C"
+                style="background: #f3722c"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#F8961E"
+                style="background: #f8961e"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#F9C74F"
+                style="background: #f9c74f"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#90BE6D"
+                style="background: #90be6d"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#43AA8B"
+                style="background: #43aa8b"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#577590"
+                style="background: #577590"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#1AA77C"
+                style="background: #1aa77c"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#6930C3"
+                style="background: #6930c3"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#5E60CE"
+                style="background: #5e60ce"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#5390D9"
+                style="background: #5390d9"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#4EA8DE"
+                style="background: #4ea8de"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#48BFE3"
+                style="background: #48bfe3"
+              ></button>
+              <button
+                class="color-dot"
+                data-color="#64DFDF"
+                style="background: #64dfdf"
+              ></button>
+            </div>
+          </div>
+        </div>
+        <!-- <input type="color" id="igp-color-main" value="#1a4a8a">
           </div>
         </div>
       </div> -->
 
-      <div id="igp-actions">
-        <button id="igp-close">Close</button>
-        <button id="igp-apply">Add Tile </button>
+        <div id="igp-actions">
+          <button id="igp-close">Close</button>
+          <button id="igp-apply">Add Tile</button>
+        </div>
       </div>
-
     </div>
-  </div>
 
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
