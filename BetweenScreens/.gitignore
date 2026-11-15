@@ -1,0 +1,6 @@
+node_modules
+.DS_Store
+.env
+
+# Local-only HTTPS certificate/keys (the real server does not use them)
+keys-for-local-https/

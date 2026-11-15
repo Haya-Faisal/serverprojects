@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.js"></script>
+  <title>Snakes</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <!-- include socket.io library: -->
+  <script src="socket.io/socket.io.js"></script>
+</head>
+
+<body>
+
+  <div class="main-wrapper">
+    <div id="waiting-message">
+      <p>Welcome to Snakes!! Press the button below to start.</p>
+    </div>
+
+    <div id="one-phone">
+      <p>You will need two phones to play the game. Scan the QR code below</p>
+    </div>
+
+    <div id="level1-message">
+      <p>Tilt your phone to move the snake! Reach the food to score points. </p>
+    </div>
+
+    <div id="congrats-overlay">
+      <p>CONGRATS!</p>
+      <p>Get ready for level 2...</p>
+      <p>Now the OTHER phone controls the snake!</p>
+    </div>
+
+    <p id="instructions"></p>
+
+    <p id="score-display"> SCORE: </p>
+
+    <div id="p5-canvas-container">
+      <!-- p5 canvas will be appended here. -->
+    </div>
+    <button id="requestOrientationButton" onclick="requestOrientation()">Start</button>
+  </div>
+
+  <!-- sketch.js must come first (sets up canvas + socket), then requestOrientation -->
+  <script src="sketch.js"></script>
+  <script src="requestOrientation.js"></script>
+
+</body>
+</html>
